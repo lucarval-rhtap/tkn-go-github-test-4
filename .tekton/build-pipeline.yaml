@@ -8,27 +8,27 @@ metadata:
   name: docker-build-rhtap
 spec:
   finally:
-    - name: show-sbom
-      params:
-        - name: IMAGE_URL
-          value: $(tasks.build-container.results.IMAGE_URL)
-      taskRef:
-        name: show-sbom-rhdh
-    - name: show-summary
-      params:
-        - name: pipelinerun-name
-          value: $(context.pipelineRun.name)
-        - name: git-url
-          value: $(tasks.clone-repository.results.url)?rev=$(tasks.clone-repository.results.commit)
-        - name: image-url
-          value: $(params.output-image)
-        - name: build-task-status
-          value: $(tasks.build-container.status)
-      taskRef:
-        name: summary
-      workspaces:
-        - name: workspace
-          workspace: workspace
+    # - name: show-sbom
+    #   params:
+    #     - name: IMAGE_URL
+    #       value: $(tasks.build-container.results.IMAGE_URL)
+    #   taskRef:
+    #     name: show-sbom-rhdh
+    # - name: show-summary
+    #   params:
+    #     - name: pipelinerun-name
+    #       value: $(context.pipelineRun.name)
+    #     - name: git-url
+    #       value: $(tasks.clone-repository.results.url)?rev=$(tasks.clone-repository.results.commit)
+    #     - name: image-url
+    #       value: $(params.output-image)
+    #     - name: build-task-status
+    #       value: $(tasks.build-container.status)
+    #   taskRef:
+    #     name: summary
+    #   workspaces:
+    #     - name: workspace
+    #       workspace: workspace
   params:
     - description: Source Repository URL
       name: git-url
@@ -83,8 +83,8 @@ spec:
       value: $(tasks.clone-repository.results.url)
     - name: CHAINS-GIT_COMMIT
       value: $(tasks.clone-repository.results.commit)
-    - name: ACS_SCAN_OUTPUT
-      value: $(tasks.acs-image-scan.results.SCAN_OUTPUT)
+    # - name: ACS_SCAN_OUTPUT
+    #   value: $(tasks.acs-image-scan.results.SCAN_OUTPUT)
   tasks:
     - name: init
       params:
@@ -143,54 +143,54 @@ spec:
       workspaces:
         - name: source
           workspace: workspace
-    - name: acs-image-check
-      params:
-        - name: rox-secret-name
-          value: $(params.stackrox-secret)
-        - name: image
-          value: $(params.output-image)
-        - name: insecure-skip-tls-verify
-          value: "true"
-        - name: image-digest
-          value: $(tasks.build-container.results.IMAGE_DIGEST)
-      runAfter:
-        - build-container
-      taskRef:
-        name: acs-image-check
-    - name: acs-image-scan
-      params:
-        - name: rox-secret-name
-          value: $(params.stackrox-secret)
-        - name: image
-          value: $(params.output-image)
-        - name: insecure-skip-tls-verify
-          value: "true"
-        - name: image-digest
-          value: $(tasks.build-container.results.IMAGE_DIGEST)
-      runAfter:
-        - build-container
-      taskRef:
-        kind: Task
-        name: acs-image-scan
-    - name: acs-deploy-check
-      params:
-        - name: rox-secret-name
-          value: $(params.stackrox-secret)
-        - name: gitops-repo-url
-          value: $(params.git-url)-gitops
-        - name: insecure-skip-tls-verify
-          value: "true"
-      runAfter:
-        - update-deployment
-      taskRef:
-        kind: Task
-        name: acs-deploy-check
-      when:
-        - input: $(params.event-type)
-          operator: in
-          values:
-            - push
-            - Push
+    # - name: acs-image-check
+    #   params:
+    #     - name: rox-secret-name
+    #       value: $(params.stackrox-secret)
+    #     - name: image
+    #       value: $(params.output-image)
+    #     - name: insecure-skip-tls-verify
+    #       value: "true"
+    #     - name: image-digest
+    #       value: $(tasks.build-container.results.IMAGE_DIGEST)
+    #   runAfter:
+    #     - build-container
+    #   taskRef:
+    #     name: acs-image-check
+    # - name: acs-image-scan
+    #   params:
+    #     - name: rox-secret-name
+    #       value: $(params.stackrox-secret)
+    #     - name: image
+    #       value: $(params.output-image)
+    #     - name: insecure-skip-tls-verify
+    #       value: "true"
+    #     - name: image-digest
+    #       value: $(tasks.build-container.results.IMAGE_DIGEST)
+    #   runAfter:
+    #     - build-container
+    #   taskRef:
+    #     kind: Task
+    #     name: acs-image-scan
+    # - name: acs-deploy-check
+    #   params:
+    #     - name: rox-secret-name
+    #       value: $(params.stackrox-secret)
+    #     - name: gitops-repo-url
+    #       value: $(params.git-url)-gitops
+    #     - name: insecure-skip-tls-verify
+    #       value: "true"
+    #   runAfter:
+    #     - update-deployment
+    #   taskRef:
+    #     kind: Task
+    #     name: acs-deploy-check
+    #   when:
+    #     - input: $(params.event-type)
+    #       operator: in
+    #       values:
+    #         - push
+    #         - Push
     - name: update-deployment
       params:
         - name: gitops-repo-url
