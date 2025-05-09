@@ -16,6 +16,6 @@ func main() {
 	http.ListenAndServe(fmt.Sprintf("0.0.0.0:%s", port), nil)
 }
 
-func HelloServer(w http.ResponseWriter, r *http.Request) {   
-	fmt.Fprint(w, "Hello World!") 
+func HelloServer(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprint(w, "Hello Mundo!")
 }
