@@ -1,5 +1,7 @@
 FROM registry.access.redhat.com/ubi9/go-toolset:1.19.13-4.1697647145
 
+LABEL bump=one
+
 COPY . .
 RUN go mod download
 
